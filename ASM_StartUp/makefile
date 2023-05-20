@@ -6,11 +6,10 @@ LD = $(PREFIX)ld
 
 # LDFLAGS
 CCFLAG = -mcpu=cortex-m3 -mthumb
-LDFLAGS = -T STM32F103C6TX_FLASH.ld --specs=nosys.specs
+LDFLAGS = -T STM32F103C6TX_FLASH.ld --specs=nosys.specs --specs=nano.specs
 
 startup.elf : startup.o main.o
 	$(CC) $(LDFLAGS) startup.o main.o -o startup.elf
-	rm *.o
 
 startup.o : startup.s
 	$(CC) $(CCFLAG) -c startup.s
@@ -21,3 +20,7 @@ main.o : main.c stm32f10x.h
 .PHONY : clean
 clean : 
 	rm *.o *.elf
+
+.PHONY : download
+download :
+	..\openocd.cmd startup.elf

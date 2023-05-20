@@ -4,6 +4,6 @@ openocd.exe ^
 -c "tcl_port disabled" ^
 -c "gdb_port disabled" ^
 -c "tcl_port disabled" ^
--c "program C:\\Users\\Administrator\\Desktop\\test\\ASM_StartUp\\Src\\startup.elf" ^
+-c "program %1" ^
 -c reset ^
 -c shutdown

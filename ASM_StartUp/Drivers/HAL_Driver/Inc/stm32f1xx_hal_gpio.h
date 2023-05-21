@@ -3,35 +3,6 @@
 
 #include "stm32f10x.h"
 
-/*GPIO外设基地址*/
-#define GPIOA_BASE (APB2PERIPH_BASE + 0x0800U)
-#define GPIOB_BASE (APB2PERIPH_BASE + 0x0C00U)
-#define GPIOC_BASE (APB2PERIPH_BASE + 0x1000U)
-#define GPIOD_BASE (APB2PERIPH_BASE + 0x1400U)
-#define GPIOE_BASE (APB2PERIPH_BASE + 0x1800U)
-#define GPIOF_BASE (APB2PERIPH_BASE + 0x1C00U)
-#define GPIOG_BASE (APB2PERIPH_BASE + 0x2000U)
-
-/*GPIO外设声明*/
-#define GPIOA ((GPIO_TypeDef*)GPIOA_BASE)
-#define GPIOB ((GPIO_TypeDef*)GPIOB_BASE)
-#define GPIOC ((GPIO_TypeDef*)GPIOC_BASE)
-#define GPIOD ((GPIO_TypeDef*)GPIOD_BASE)
-#define GPIOE ((GPIO_TypeDef*)GPIOE_BASE)
-#define GPIOF ((GPIO_TypeDef*)GPIOF_BASE)
-#define GPIOG ((GPIO_TypeDef*)GPIOG_BASE)
-
-typedef struct
-{
-	__IO u32 CRL;  // 端口配置低寄存器			地址偏移0x00
-	__IO u32 CRH;  // 端口配置高寄存器			地址偏移0x04
-	__IO u32 IDR;  // 端口数据输入寄存器		地址偏移0x08
-	__IO u32 ODR;  // 端口数据输出寄存器		地址偏移0x0C
-	__IO u32 BSRR; // 端口位设置/清除寄存器		地址偏移0x10
-	__IO u32 BRR;  // 端口位清除寄存器			地址偏移0x14
-	__IO u32 LCKR; // 端口配置锁定寄存器		地址偏移0x18
-} GPIO_TypeDef;
-
 typedef enum
 {
 	GPIO_Speed_10MHz = 0x01,
@@ -84,5 +55,7 @@ typedef struct
 void GPIO_SetBits(GPIO_TypeDef* GPIOx, u16 GPIO_Pin);
 
 void GPIO_ResetBits(GPIO_TypeDef* GPIOx, u16 GPIO_Pin);
+
+void GPIO_Init(GPIO_TypeDef* GPIOx, GPIO_InitTypeDef* GPIO_InitConfig);
 
 #endif

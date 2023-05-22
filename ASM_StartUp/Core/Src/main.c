@@ -39,12 +39,8 @@ void SystemInit()
 	while (!(RCC->CFGR & RCC_CFGR_SWS_PLL))
 		;
 
-	// 打开gpio A端口的时钟
-		RCC->APB2ENR |= (1 << 2);
-	// 打开gpio c端口的时钟
-	RCC->APB2ENR |= (1 << 4);
-	// 打开USART1端口的时钟
-		RCC->APB2ENR |= (1 << 14);
+	// 打开gpio A C 、 USART1端口的时钟
+	RCC->APB2ENR |= (RCC_APB2ENR_IOPAEN | RCC_APB2ENR_IOPCEN | RCC_APB2ENR_USART1EN);
 }
 
 void GpioInit()
@@ -90,13 +86,13 @@ int main()
 	GPIO_ResetBits(GPIOC, GPIO_Pin_13);
 	while (1)
 	{
-				if ((USART1->SR) & (1 << 7))
-				{
-					// USART1->DR = RCC->CFGR;
-					// USART1->DR = RCC->CFGR >> 8;
-					USART1->DR = 0x11;
-					// USART1->DR = RCC->CFGR >> 24;
-				}
+		if ((USART1->SR) & (1 << 7))
+		{
+			// USART1->DR = RCC->CFGR;
+			// USART1->DR = RCC->CFGR >> 8;
+			USART1->DR = 0x11;
+			// USART1->DR = RCC->CFGR >> 24;
+		}
 		delay(100);
 		GPIOC->ODR ^= (1 << 13);
 	}

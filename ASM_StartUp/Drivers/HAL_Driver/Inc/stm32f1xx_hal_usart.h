@@ -1,7 +1,7 @@
 #ifndef __STM32F1xx_HAL_USART_H
 #define __STM32F1xx_HAL_USART_H
 
-#include "stm32f10x.h"
+#include "stm32f103x6.h"
 
 void USART_Init(USART_TypeDef* USARTx);
 

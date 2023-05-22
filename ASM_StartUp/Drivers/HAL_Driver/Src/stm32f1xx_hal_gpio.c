@@ -1,4 +1,4 @@
-#include "stm32f10x.h"
+#include "stm32f103x6.h"
 #include "stm32f1xx_hal_gpio.h"
 /**
  *函数功能：设置引脚为高电平

@@ -5,8 +5,10 @@ CC = $(PREFIX)gcc
 LD = $(PREFIX)ld
 
 # LDFLAGS
-CCFLAG = -mcpu=cortex-m3 -mthumb -I ./ASM_StartUp/Core/Inc -I ./ASM_StartUp/Drivers/HAL_Driver/Inc
+CCFLAG = -mcpu=cortex-m3 -mthumb -I ./ASM_StartUp/Core/Inc -I ./ASM_StartUp/Drivers/HAL_Driver/Inc -g
 LDFLAGS = -T STM32F103C6TX_FLASH.ld --specs=nosys.specs --specs=nano.specs
+
+all : startup.elf
 
 startup.elf : startup.o main.o gpio.o usart.o
 	$(CC) $(LDFLAGS) startup.o main.o gpio.o usart.o -o startup.elf

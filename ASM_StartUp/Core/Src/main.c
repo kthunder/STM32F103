@@ -57,7 +57,7 @@ int main()
 		{
 			USART1->DR = 0x20u;
 
-			// GPIO_SetBits(GPIOC, GPIO_Pin_13);
+			GPIO_SetBits(GPIOC, GPIO_Pin_13);
 			delay(100);
 			GPIOC->ODR ^= (1 << 13);
 		}

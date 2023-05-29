@@ -1,0 +1,2 @@
+-I ./ASM_StartUp/Core/Inc
+-I ./ASM_StartUp/Drivers/HAL_Driver/Inc

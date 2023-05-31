@@ -1,4 +1,4 @@
-#include "stm32f103x6.h"
+#include "stm32f1xx.h"
 #include "stm32f1xx_hal_usart.h"
 
 

@@ -5,8 +5,6 @@
 
 void USART_Init(USART_TypeDef* USARTx);
 
-// void GPIO_SetBits(GPIO_TypeDef* GPIOx, u16 GPIO_Pin);
-
-// void GPIO_ResetBits(GPIO_TypeDef* GPIOx, u16 GPIO_Pin);
+uint32_t USART_Transmit(USART_TypeDef* USARTx, uint8_t *pData, uint16_t nSize);
 
 #endif

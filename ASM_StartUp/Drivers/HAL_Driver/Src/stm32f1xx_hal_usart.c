@@ -13,7 +13,7 @@ void USART_Init(USART_TypeDef* USARTx)
 
 uint32_t USART_Transmit(USART_TypeDef* USARTx, uint8_t* pData, uint16_t nSize)
 {
-	if ((USART1->SR) & (1 << 7))
+	if (READ_BIT(USART1->SR, USART_SR_TXE))
 	{
 		// USART1->DR = RCC->CFGR;
 		// USART1->DR = RCC->CFGR >> 8;

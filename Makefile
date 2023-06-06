@@ -17,8 +17,9 @@ STRIP    = $(CROSS_COMPILE)strip
 OBJCOPY  = $(CROSS_COMPILE)objcopy
 OBJDUMP  = $(CROSS_COMPILE)objdump
 
-CCFLAGS := -Wall -O2 -g
-CCFLAGS += -mcpu=cortex-m3 -mthumb @path.include
+CCFLAGS := -Wall -O0 -g
+CCFLAGS += -mcpu=cortex-m3 -mthumb
+CCFLAGS += -I ./ASM_StartUp/Core/Inc -I ./ASM_StartUp/Drivers/HAL_Driver/Inc
 
 LDFLAGS := -T $(ENV_DIR)/STM32F103C6TX_FLASH.ld
 LDFLAGS += --specs=nosys.specs --specs=nano.specs
@@ -44,6 +45,8 @@ $(OBJ) : %.o : % $(HDR)
 	mkdir -p $(shell dirname $(BLD_DIR)/$@)
 	$(CC) -c $< $(CCFLAGS) -o $(BLD_DIR)/$@
 
+all : $(TARGET_NAME).elf
+
 .PHONY : clean
 clean :
 	rm -rf $(BLD_DIR)/$(SRC_DIR)
@@ -54,4 +57,5 @@ clean_all :
 
 .PHONY : download
 download :
+	make
 	$(call download)

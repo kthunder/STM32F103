@@ -13,12 +13,13 @@ void USART_Init(USART_TypeDef* USARTx)
 
 uint32_t USART_Transmit(USART_TypeDef* USARTx, uint8_t* pData, uint16_t nSize)
 {
-	if (READ_BIT(USART1->SR, USART_SR_TXE))
+	while (nSize > 0)
 	{
-		// USART1->DR = RCC->CFGR;
-		// USART1->DR = RCC->CFGR >> 8;
-		USART1->DR = 0x11;
-		// USART1->DR = RCC->CFGR >> 24;
+		if (READ_BIT(USARTx->SR, USART_SR_TXE))
+		{
+			USARTx->DR = *pData++;
+			nSize--;
+		}
 	}
-	return 0;
+	return nSize;
 }

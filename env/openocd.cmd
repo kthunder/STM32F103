@@ -7,7 +7,7 @@ openocd.exe ^
 -c "tcl_port disabled" ^
 -c "gdb_port disabled" ^
 -c "tcl_port disabled" ^
--c "program '%1'" ^
+-c "program %1" ^
 -c reset ^
 -c shutdown
 

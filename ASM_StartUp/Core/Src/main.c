@@ -2,6 +2,12 @@
 #include "stm32f1xx_hal_gpio.h"
 #include "stm32f1xx_hal_usart.h"
 #include "stm32f1xx_hal_rcc.h"
+#include <stdio.h>
+
+int __io_putchar(int ch)
+{
+	return USART_Transmit(USART1, (uint8_t*)&ch, 1);
+}
 
 // 系统初始化
 void SystemInit()
@@ -45,6 +51,8 @@ void delay(unsigned int ms)
 	}
 }
 
+uint8_t pDate[] = {'c'};
+
 int main()
 {
 	GpioInit();
@@ -52,13 +60,9 @@ int main()
 	GPIO_ResetBits(GPIOC, GPIO_Pin_13);
 	while (1)
 	{
-		if ((USART1->SR) & (1 << 7))
-		{
-			// USART1->DR = RCC->CFGR;
-			// USART1->DR = RCC->CFGR >> 8;
-			USART1->DR = 0x11;
-			// USART1->DR = RCC->CFGR >> 24;
-		}
+		USART_Transmit(USART1, pDate, 1);
+		// printf("1234\n");
+		USART_Transmit(USART1, pDate, 1);
 		delay(100);
 		GPIOC->ODR ^= (1 << 13);
 	}

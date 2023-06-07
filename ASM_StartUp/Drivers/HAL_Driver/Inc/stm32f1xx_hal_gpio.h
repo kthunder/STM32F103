@@ -25,7 +25,7 @@ typedef enum
 
 typedef struct
 {
-	u16 GPIO_Pin;					//引脚
+	uint16_t GPIO_Pin;					//引脚
 
 	GPIO_Speed_TypeDef GPIO_Speed;	//速度
 
@@ -33,28 +33,28 @@ typedef struct
 } GPIO_InitTypeDef;
 
 
-#define GPIO_Pin_0 ((u16)1 << 0)
-#define GPIO_Pin_1 ((u16)1 << 1)
-#define GPIO_Pin_2 ((u16)1 << 2)
-#define GPIO_Pin_3 ((u16)1 << 3)
-#define GPIO_Pin_4 ((u16)1 << 4)
-#define GPIO_Pin_5 ((u16)1 << 5)
-#define GPIO_Pin_6 ((u16)1 << 6)
-#define GPIO_Pin_7 ((u16)1 << 7)
-#define GPIO_Pin_8 ((u16)1 << 8)
-#define GPIO_Pin_9 ((u16)1 << 9)
-#define GPIO_Pin_10 ((u16)1 << 10)
-#define GPIO_Pin_11 ((u16)1 << 11)
-#define GPIO_Pin_12 ((u16)1 << 12)
-#define GPIO_Pin_13 ((u16)1 << 13)
-#define GPIO_Pin_14 ((u16)1 << 14)
-#define GPIO_Pin_15 ((u16)1 << 15)
-#define GPIO_Pin_16 ((u16)1 << 16)
-#define GPIO_Pin_All ((u16)0xFFFF)
+#define GPIO_Pin_0 ((uint16_t)1 << 0)
+#define GPIO_Pin_1 ((uint16_t)1 << 1)
+#define GPIO_Pin_2 ((uint16_t)1 << 2)
+#define GPIO_Pin_3 ((uint16_t)1 << 3)
+#define GPIO_Pin_4 ((uint16_t)1 << 4)
+#define GPIO_Pin_5 ((uint16_t)1 << 5)
+#define GPIO_Pin_6 ((uint16_t)1 << 6)
+#define GPIO_Pin_7 ((uint16_t)1 << 7)
+#define GPIO_Pin_8 ((uint16_t)1 << 8)
+#define GPIO_Pin_9 ((uint16_t)1 << 9)
+#define GPIO_Pin_10 ((uint16_t)1 << 10)
+#define GPIO_Pin_11 ((uint16_t)1 << 11)
+#define GPIO_Pin_12 ((uint16_t)1 << 12)
+#define GPIO_Pin_13 ((uint16_t)1 << 13)
+#define GPIO_Pin_14 ((uint16_t)1 << 14)
+#define GPIO_Pin_15 ((uint16_t)1 << 15)
+#define GPIO_Pin_16 ((uint16_t)1 << 16)
+#define GPIO_Pin_All ((uint16_t)0xFFFF)
 
-void GPIO_SetBits(GPIO_TypeDef* GPIOx, u16 GPIO_Pin);
+void GPIO_SetBits(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
 
-void GPIO_ResetBits(GPIO_TypeDef* GPIOx, u16 GPIO_Pin);
+void GPIO_ResetBits(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
 
 void GPIO_Init(GPIO_TypeDef* GPIOx, GPIO_InitTypeDef* GPIO_InitConfig);
 

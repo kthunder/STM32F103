@@ -18,8 +18,13 @@ OBJCOPY  = $(CROSS_COMPILE)objcopy
 OBJDUMP  = $(CROSS_COMPILE)objdump
 
 CCFLAGS := -Wall -O0 -g
-CCFLAGS += -mcpu=cortex-m3 -mthumb
-CCFLAGS += -I ./ASM_StartUp/Core/Inc -I ./ASM_StartUp/Drivers/HAL_Driver/Inc
+CCFLAGS += -mcpu=cortex-m3 -mthumb -mthumb-interwork
+CCFLAGS += -ffunction-sections -fdata-sections -fno-common -fmessage-length=0
+CCFLAGS += -I ./ASM_StartUp/Core/Inc 
+CCFLAGS += -I ./ASM_StartUp/Drivers/HAL_Driver/Inc 
+CCFLAGS += -I ./ASM_StartUp\Drivers\CMSIS\Include
+CCFLAGS += -I ./ASM_StartUp\Drivers\CMSIS\Device\ST\STM32F1xx\Include
+CCFLAGS += -D STM32F103x6
 
 LDFLAGS := -T $(ENV_DIR)/STM32F103C6TX_FLASH.ld
 LDFLAGS += --specs=nosys.specs --specs=nano.specs

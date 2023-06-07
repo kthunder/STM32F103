@@ -9,7 +9,7 @@
   *          This file contains:
   *           - Data structures and the address mapping for all peripherals
   *           - Peripheral's registers declarations and bits definition
-  *           - Macros to access peripheralï¿½s registers hardware
+  *           - Macros to access peripheral’s registers hardware
   *  
   ******************************************************************************
   * @attention
@@ -124,14 +124,10 @@ typedef enum
   * @}
   */
 
-//#include "core_cm3.h"
-//#include "system_stm32f1xx.h"
+#include "core_cm3.h"
+#include "system_stm32f1xx.h"
 #include <stdint.h>
-#define __IO volatile
 
-typedef uint32_t u32;
-typedef uint16_t u16;
-typedef uint8_t u8;
 /** @addtogroup Peripheral_registers_structures
   * @{
   */   

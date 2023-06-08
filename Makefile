@@ -27,6 +27,8 @@ CCFLAGS += -I ./ASM_StartUp\Drivers\CMSIS\Device\ST\STM32F1xx\Include
 CCFLAGS += -D STM32F103x6
 
 LDFLAGS := -T $(ENV_DIR)/STM32F103C6TX_FLASH.ld
+LDFLAGS += -Wl,-gc-sections,--print-memory-usage
+LDFLAGS += -mcpu=cortex-m3 -mthumb -mthumb-interwork
 LDFLAGS += --specs=nosys.specs --specs=nano.specs
 
 ifeq ($(OS),Windows_NT)

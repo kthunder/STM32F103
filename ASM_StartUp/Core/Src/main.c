@@ -45,7 +45,7 @@ int main()
     while (1)
     {
         GPIOC->ODR ^= (1 << 13);
-        _write(0, "123456789\n", 10);
-        delay_ms(1000);
+        printf("hello stm\n");
+        delay_ms(2000);
     }
 }

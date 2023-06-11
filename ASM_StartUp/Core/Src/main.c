@@ -46,6 +46,6 @@ int main()
     {
         GPIOC->ODR ^= (1 << 13);
         printf("hello stm\n");
-        delay_ms(2000);
+        delay_ms(1000);
     }
 }

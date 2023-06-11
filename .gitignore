@@ -2,6 +2,7 @@
 .vscode/
 .idea/
 .cache/
+build/
 compile_commands.json
 
 # BIN

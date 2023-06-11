@@ -32,7 +32,7 @@ LDFLAGS += -mcpu=cortex-m3 -mthumb
 LDFLAGS += --specs=nosys.specs --specs=nano.specs
 
 ifeq ($(OS),Windows_NT)
-   download = $(ENV_DIR)/openocd.cmd $(abspath $(BLD_DIR)/$(TARGET_NAME).elf)
+   download = $(ENV_DIR)\openocd.cmd $(abspath $(BLD_DIR)/$(TARGET_NAME).elf)
 else
    download = echo "Not implement"
 endif

@@ -7,3 +7,6 @@
 arm-none-eabi-gcc
 
 openocd
+
+pip install compiledb
+compiledb make

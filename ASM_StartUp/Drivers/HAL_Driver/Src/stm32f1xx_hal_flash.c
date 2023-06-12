@@ -2,6 +2,7 @@
 #include "log.h"
 #include "stm32f103x6.h"
 #include "stm32f1xx.h"
+#include "tools.h"
 #include <stdint.h>
 #include <string.h>
 
@@ -17,6 +18,12 @@ static inline void FLASH_UNLOCK() {
 static inline void FLASH_LOCK() { SET_BIT(FLASH->CR, FLASH_CR_LOCK); }
 
 static inline void FLASH_Progarm_HalfWord(uint32_t addr, uint16_t data) {
+  // assert_param(addr >= 0); uint32_t do not need
+  assert_param(addr % 2 == 0);
+  assert_param(addr < (FLASH_BANK1_END - FLASH_BASE));
+
+  log_info("addr : 0x%X, data %d", addr, data);
+
   // start program
   SET_BIT(FLASH->CR, FLASH_CR_PG);
   // write data
@@ -24,6 +31,9 @@ static inline void FLASH_Progarm_HalfWord(uint32_t addr, uint16_t data) {
 }
 
 uint32_t FLASH_Write(uint32_t addr, void *ptr, uint32_t len) {
+  assert_param(addr % 2 == 0);
+  assert_param(ptr != NULL);
+  assert_param((addr + len) <= (FLASH_BANK1_END - FLASH_BASE));
 
   if (FLASH_Blank_Check(addr, len)) {
     log_warn("FLASH_Blank_Check FAILED ADDR:0x%X LEN:%d", addr, len);
@@ -35,7 +45,7 @@ uint32_t FLASH_Write(uint32_t addr, void *ptr, uint32_t len) {
     FLASH_UNLOCK();
 
   for (uint32_t i = 0; i < len; i += 2) {
-    FLASH_Progarm_HalfWord(addr + 2 * i, *(uint16_t *)(ptr + i));
+    FLASH_Progarm_HalfWord(addr + i, *(uint16_t *)(ptr + i));
     // waite idle
     while (READ_BIT(FLASH->SR, FLASH_SR_BSY))
       ;
@@ -50,11 +60,18 @@ uint32_t FLASH_Write(uint32_t addr, void *ptr, uint32_t len) {
 }
 
 uint32_t FLASH_Read(uint32_t addr, void *ptr, uint32_t len) {
+  assert_param(addr % 2 == 0);
+  assert_param(ptr != NULL);
+  assert_param((addr + len) <= (FLASH_BANK1_END - FLASH_BASE));
+
   memcpy(ptr, (const void *)(addr + FLASH_BASE), len);
   return 0;
 }
 
 uint32_t FLASH_Blank_Check(uint32_t addr, uint32_t len) {
+  assert_param(addr % 2 == 0);
+  assert_param((addr + len) <= (FLASH_BANK1_END - FLASH_BASE));
+
   for (uint32_t i = 0; i < len; i++) {
     if (*(uint8_t *)(FLASH_BASE + addr + i) != 0xFF)
       return 1;
@@ -63,6 +80,7 @@ uint32_t FLASH_Blank_Check(uint32_t addr, uint32_t len) {
 }
 
 uint32_t FLASH_Erase(uint32_t addr) {
+  assert_param(addr <= (FLASH_BANK1_END - FLASH_BASE));
 
   uint32_t pageStartAddr = addr - addr % 1024;
 

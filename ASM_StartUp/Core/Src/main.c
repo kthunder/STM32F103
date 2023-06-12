@@ -12,7 +12,7 @@
 void printHex(uint8_t *ptr, uint32_t len) {
 
   for (uint32_t i = 0; i < len; i++) {
-    printf("%02X", ptr[i]);
+    printf("%02X ", ptr[i]);
     if (((i + 1) % 20 == 0) || (i + 1 == len)) {
       printf("\n");
     }
@@ -50,34 +50,34 @@ void GpioInit() {
 }
 
 int main() {
-  uint8_t ucWrtie[100] = {0};
-  uint8_t ucRead[100] = {0};
-
-  for (uint32_t i = 0; i < 100; i++) {
-    ucWrtie[i] = i % 0xFF;
-  }
+  uint8_t ucWrite[100] = {0};
+  //   uint8_t ucRead[100] = {0};
 
   GpioInit();
   USART_Init(USART1);
   log_init(0, true, NULL, NULL);
 
-  //   printf("check %d\n", FLASH_Blank_Check(0x7000 + 1024, 1024));
-  //   printHex((uint8_t *)(FLASH_BASE + 0x7000 + 1024), 1024);
+  for (uint32_t i = 0; i < 100; i++) {
+    ucWrite[i] = i % 0xFF;
+  }
+  printHex(ucWrite, 100);
 
-  for (uint32_t addr = 0x5000, step = 1024; addr < FLASH_BANK1_END - FLASH_BASE;
+  //   FLASH_Erase(0x6000);
+  for (uint32_t addr = 0x6000, step = 100; addr < FLASH_BANK1_END - FLASH_BASE;
        addr += step) {
-        FLASH_Erase(addr);
-    // if (!FLASH_Blank_Check(addr, step)) {
-    //   FLASH_Write(addr, ucWrtie, step);
-    //   printf("address :\n");
-    //   printHex((uint8_t *)(FLASH_BASE + addr), step);
-    //   break;
-    // }
+    log_info("addr : 0x%X, len : %d", addr, step);
+
+    if (!FLASH_Blank_Check(addr, step)) {
+      FLASH_Write(addr, ucWrite, step);
+      printf("address : 0x%02X\n", addr);
+      printHex((uint8_t *)(FLASH_BASE + addr), step);
+      break;
+    }
   }
 
   while (1) {
     GPIOC->ODR ^= (1 << 13);
     printf("heart beat\n");
-    delay_ms(10000);
+    delay_ms(5000);
   }
 }

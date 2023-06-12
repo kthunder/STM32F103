@@ -4,6 +4,7 @@
 #include "stm32f1xx_hal_rcc.h"
 #include <stdio.h>
 #include "tools.h"
+#include "log.h"
 
 // 系统初始化
 void SystemInit()
@@ -41,6 +42,9 @@ int main()
 {
     GpioInit();
     USART_Init(USART1);
+
+    log_init(0, true, NULL, NULL);
+
     GPIO_ResetBits(GPIOC, GPIO_Pin_13);
     while (1)
     {

@@ -53,3 +53,8 @@ void SysTick_Handler()
 {
     systicks++;
 }
+
+void HardFault_Handler()
+{
+    printf("%s\n",__func__);
+}

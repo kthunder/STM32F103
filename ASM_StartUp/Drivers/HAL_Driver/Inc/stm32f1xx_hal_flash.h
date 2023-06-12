@@ -3,8 +3,8 @@
 
 #include "stm32f1xx.h"
 
-// void FLASH_Init(FLASH_TypeDef* FLASHx);
-
-// uint32_t FLASH_Transmit(FLASH_TypeDef* FLASHx, uint8_t *pData, uint16_t nSize);
-
+uint32_t FLASH_Write(uint32_t addr, void *ptr, uint32_t len);
+uint32_t FLASH_Read(uint32_t addr, void *ptr, uint32_t len);
+uint32_t FLASH_Blank_Check(uint32_t addr, uint32_t len);
+uint32_t FLASH_Erase(uint32_t addr);
 #endif

@@ -64,13 +64,13 @@ uint32_t FLASH_Blank_Check(uint32_t addr, uint32_t len) {
 
 uint32_t FLASH_Erase(uint32_t addr) {
 
-  uint32_t pageAddr = addr - addr % 1024;
+  uint32_t pageStartAddr = addr - addr % 1024;
 
   log_info("FLASH_Erase ADDR:0x%X", addr + FLASH_BASE);
-  log_info("FLASH_Erase pageAddr:0x%X", pageAddr + FLASH_BASE);
+  log_info("FLASH_Erase pageStartAddr:0x%X", pageStartAddr + FLASH_BASE);
 
   // need erase page
-  if (FLASH_Blank_Check(pageAddr, 1024)) {
+  if (FLASH_Blank_Check(pageStartAddr, 1024)) {
     // unlock flash
     if (READ_BIT(FLASH->CR, FLASH_CR_LOCK))
       FLASH_UNLOCK();
@@ -94,5 +94,5 @@ uint32_t FLASH_Erase(uint32_t addr) {
     FLASH_LOCK();
   }
 
-  return FLASH_Blank_Check(pageAddr, 1024);
+  return FLASH_Blank_Check(pageStartAddr, 1024);
 }

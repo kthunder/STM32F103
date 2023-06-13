@@ -63,17 +63,18 @@ int main() {
   printHex(ucWrite, 100);
 
   //   FLASH_Erase(0x6000);
-  for (uint32_t addr = 0x6000, step = 100; addr < FLASH_BANK1_END - FLASH_BASE;
-       addr += step) {
-    log_info("addr : 0x%X, len : %d", addr, step);
+//   for (uint32_t addr = 0x6000, step = 100; addr < FLASH_BANK1_END - FLASH_BASE;
+//        addr += step) {
+//     log_info("addr : 0x%X, len : %d", addr, step);
 
-    if (!FLASH_Blank_Check(addr, step)) {
-      FLASH_Write(addr, ucWrite, step);
-      printf("address : 0x%02lX\n", addr);
-      printHex((uint8_t *)(FLASH_BASE + addr), step);
-      break;
-    }
-  }
+//     if (!FLASH_Blank_Check(addr, step)) {
+//       FLASH_Write(addr, ucWrite, step);
+//       printf("address : 0x%02lX\n", addr);
+//       printHex((uint8_t *)(FLASH_BASE + addr), step);
+//       break;
+//     }
+//   }
+    __ASM volatile ("SVC 0x01");
 
   while (1) {
     GPIOC->ODR ^= (1 << 13);

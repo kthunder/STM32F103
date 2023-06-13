@@ -1,4 +1,5 @@
 #include "tools.h"
+#include "stm32f103x6.h"
 #include "stm32f1xx.h"
 #include "stm32f1xx_hal_usart.h"
 #include <stdint.h>
@@ -47,6 +48,13 @@ uint32_t HAL_GetTick() { return systicks; }
 void SysTick_Handler() { systicks++; }
 
 void HardFault_Handler() {
+  printf("%s\n", __func__);
+  while (1) {
+    ;
+  }
+}
+
+void SVC_Handler() {
   printf("%s\n", __func__);
   while (1) {
     ;

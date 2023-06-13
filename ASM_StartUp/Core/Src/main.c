@@ -69,7 +69,7 @@ int main() {
 
     if (!FLASH_Blank_Check(addr, step)) {
       FLASH_Write(addr, ucWrite, step);
-      printf("address : 0x%02X\n", addr);
+      printf("address : 0x%02lX\n", addr);
       printHex((uint8_t *)(FLASH_BASE + addr), step);
       break;
     }

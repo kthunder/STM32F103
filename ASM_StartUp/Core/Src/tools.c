@@ -45,6 +45,13 @@ void delay_ms(uint32_t ms) {
 
 uint32_t HAL_GetTick() { return systicks; }
 
+void Active_Soft_EXIT(IRQn_Type nIRQ) {
+  // __ASM volatile("SVC 0x01");
+  NVIC_EnableIRQ(nIRQ);
+  SET_BIT(SCB->CCR, SCB_CCR_USERSETMPEND_Msk);
+  WRITE_REG(NVIC->STIR, nIRQ);
+}
+
 void SysTick_Handler() { systicks++; }
 
 void HardFault_Handler() {
@@ -55,6 +62,12 @@ void HardFault_Handler() {
 }
 
 void SVC_Handler() {
+  printf("%s\n", __func__);
+  while (1) {
+    ;
+  }
+}
+void USBWakeUp_IRQHandler() {
   printf("%s\n", __func__);
   while (1) {
     ;

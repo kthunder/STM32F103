@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <stdio.h>
 
-
 static uint32_t systicks = 0;
 
 __attribute__((weak)) int __io_getchar() {
@@ -42,6 +41,8 @@ void delay_ms(uint32_t ms) {
   while (systicks - current < ms)
     ;
 }
+
+uint32_t HAL_GetTick() { return systicks; }
 
 void SysTick_Handler() { systicks++; }
 

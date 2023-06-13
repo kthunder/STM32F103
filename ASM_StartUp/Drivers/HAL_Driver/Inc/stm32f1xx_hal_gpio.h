@@ -1,6 +1,10 @@
 #ifndef __STM32F1xx_HAL_GPIO_H
 #define __STM32F1xx_HAL_GPIO_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // #include "stm32f1xx.h"
 #include "stm32f103x6.h"
 
@@ -58,5 +62,9 @@ void GPIO_SetBits(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
 void GPIO_ResetBits(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
 
 void GPIO_Init(GPIO_TypeDef* GPIOx, GPIO_InitTypeDef* GPIO_InitConfig);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -5,6 +5,8 @@
 
 void delay_ms(uint32_t ms);
 
+uint32_t HAL_GetTick();
+
 #define assert_param(expr)                                                     \
   ((expr) ? (void)0U : assert_failed((uint8_t *)__FILE__, __LINE__))
 /* Exported functions ------------------------------------------------------- */

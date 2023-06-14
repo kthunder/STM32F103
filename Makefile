@@ -64,5 +64,5 @@ clean_all :
 
 .PHONY : download
 download :
-	compiledb make
+	compiledb make -j12
 	$(call download)

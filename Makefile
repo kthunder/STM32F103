@@ -1,9 +1,9 @@
 # Modify names below
-SRC_DIR := ASM_StartUp
+SRC_DIR := src
 BLD_DIR := build
 ENV_DIR := env
 OBJ_DIR := $(BLD_DIR)
-TARGET_NAME := startup
+TARGET_NAME := main
 
 CROSS_COMPILE = arm-none-eabi-
 AS  = $(CROSS_COMPILE)as
@@ -20,10 +20,10 @@ OBJDUMP  = $(CROSS_COMPILE)objdump
 CCFLAGS := -Wall -O0 -g
 CCFLAGS += -mcpu=cortex-m3 -mthumb
 CCFLAGS += -ffunction-sections -fdata-sections -fno-common -fmessage-length=0
-CCFLAGS += -I ./ASM_StartUp/Core/Inc 
-CCFLAGS += -I ./ASM_StartUp/Drivers/HAL_Driver/Inc 
-CCFLAGS += -I ./ASM_StartUp/Drivers/CMSIS/Include
-CCFLAGS += -I ./ASM_StartUp/Drivers/CMSIS/Device/ST/STM32F1xx/Include
+CCFLAGS += -I ./src/Core/Inc 
+CCFLAGS += -I ./src/Drivers/HAL_Driver/Inc 
+CCFLAGS += -I ./src/Drivers/CMSIS/Include
+CCFLAGS += -I ./src/Drivers/CMSIS/Device/ST/STM32F1xx/Include
 CCFLAGS += -D STM32F103x6
 
 LDFLAGS := -T $(ENV_DIR)/STM32F103C6TX_FLASH.ld

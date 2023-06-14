@@ -61,6 +61,8 @@ void GPIO_SetBits(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
 
 void GPIO_ResetBits(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
 
+void GPIO_TogglePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
+
 void GPIO_Init(GPIO_TypeDef* GPIOx, GPIO_InitTypeDef* GPIO_InitConfig);
 
 #ifdef __cplusplus

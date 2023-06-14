@@ -15,7 +15,7 @@ void SystemInit() {
 }
 
 void GpioInit() {
-  GPIO_InitTypeDef ucGpio[] = {
+  GPIO_InitTypeDef ucGpioConfig[] = {
       {
           .GPIO_Pin = GPIO_Pin_9,
           .GPIO_Mode = GPIO_Mode_AF_PP,
@@ -33,9 +33,9 @@ void GpioInit() {
       },
   };
 
-  GPIO_Init(GPIOA, &ucGpio[0]);
-  GPIO_Init(GPIOA, &ucGpio[1]);
-  GPIO_Init(GPIOC, &ucGpio[2]);
+  GPIO_Init(GPIOA, &ucGpioConfig[0]);
+  GPIO_Init(GPIOA, &ucGpioConfig[1]);
+  GPIO_Init(GPIOC, &ucGpioConfig[2]);
 }
 
 int main() {
@@ -44,8 +44,7 @@ int main() {
   log_init(0, true, NULL, NULL);
 
   while (1) {
-    GPIOC->ODR ^= (1 << 13);
-    printf("heart beat\n");
-    delay_ms(5000);
+    GPIO_TogglePin(GPIOC, GPIO_Pin_13);
+    delay_ms(3000);
   }
 }

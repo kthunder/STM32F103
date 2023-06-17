@@ -2,41 +2,41 @@
 #define __STM32F1xx_HAL_GPIO_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 // #include "stm32f1xx.h"
 #include "stm32f103x6.h"
 
-typedef enum
-{
-	GPIO_Speed_10MHz = 0x01,
-	GPIO_Speed_2MHz = 0x01,
-	GPIO_Speed_50MHz = 0x01,
-} GPIO_Speed_TypeDef;
+    typedef enum
+    {
+        GPIO_Speed_10MHz = 0x01,
+        GPIO_Speed_2MHz = 0x01,
+        GPIO_Speed_50MHz = 0x01,
+    } GPIO_Speed_TypeDef;
 
-typedef enum
-{
-	GPIO_Mode_AIN = 0x00,			// 模拟输入
-	GPIO_Mode_IN_FLOATING = 0x04,	// 浮空输入
-	GPIO_Mode_IPD = 0x28,			// 下拉输入
-	GPIO_Mode_IPU = 0x48,			// 上拉输入
+    typedef enum
+    {
+        GPIO_Mode_AIN = 0x00,         // 模拟输入
+        GPIO_Mode_IN_FLOATING = 0x04, // 浮空输入
+        GPIO_Mode_IPD = 0x28,         // 下拉输入
+        GPIO_Mode_IPU = 0x48,         // 上拉输入
 
-	GPIO_Mode_OUT_OD = 0x14,		// 开漏输出
-	GPIO_Mode_OUT_PP = 0x10,		// 推挽输出
-	GPIO_Mode_AF_Od = 0x1C,			// 复用开漏输出
-	GPIO_Mode_AF_PP = 0x18,			// 复用推挽输出
-} GPIO_Mode_TypeDef;
+        GPIO_Mode_OUT_OD = 0x14, // 开漏输出
+        GPIO_Mode_OUT_PP = 0x10, // 推挽输出
+        GPIO_Mode_AF_Od = 0x1C,  // 复用开漏输出
+        GPIO_Mode_AF_PP = 0x18,  // 复用推挽输出
+    } GPIO_Mode_TypeDef;
 
-typedef struct
-{
-	uint16_t GPIO_Pin;					//引脚
+    typedef struct
+    {
+        uint16_t GPIO_Pin; // 引脚
 
-	GPIO_Speed_TypeDef GPIO_Speed;	//速度
+        GPIO_Speed_TypeDef GPIO_Speed; // 速度
 
-	GPIO_Mode_TypeDef GPIO_Mode;	//模式
-} GPIO_InitTypeDef;
-
+        GPIO_Mode_TypeDef GPIO_Mode; // 模式
+    } GPIO_InitTypeDef;
 
 #define GPIO_Pin_0 ((uint16_t)1 << 0)
 #define GPIO_Pin_1 ((uint16_t)1 << 1)
@@ -57,13 +57,13 @@ typedef struct
 #define GPIO_Pin_16 ((uint16_t)1 << 16)
 #define GPIO_Pin_All ((uint16_t)0xFFFF)
 
-void GPIO_SetBits(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
+    void GPIO_SetBits(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
 
-void GPIO_ResetBits(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
+    void GPIO_ResetBits(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
 
-void GPIO_TogglePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
+    void GPIO_TogglePin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
 
-void GPIO_Init(GPIO_TypeDef* GPIOx, GPIO_InitTypeDef* GPIO_InitConfig);
+    void GPIO_Init(GPIO_TypeDef *GPIOx, GPIO_InitTypeDef *GPIO_InitConfig);
 
 #ifdef __cplusplus
 }

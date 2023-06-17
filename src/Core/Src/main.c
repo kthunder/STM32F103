@@ -41,9 +41,9 @@ void GpioInit() {
 int main() {
   GpioInit();
   USART_Init(USART1);
-  log_init(0, true, NULL, NULL);
 
   while (1) {
+    log_info("heart beat");
     GPIO_TogglePin(GPIOC, GPIO_Pin_13);
     delay_ms(3000);
   }

@@ -141,7 +141,7 @@ void log_log(int level, const char* file_name, int line, const char* fmt, ...)
 	unlock();
 }
 
-#ifndef TEST_LOG
+#ifdef TEST_LOG
 int main(int argc, char* argv[])
 {
 	// FILE* fp = fopen("./log_info.txt", "ab");

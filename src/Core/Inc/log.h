@@ -14,14 +14,14 @@
 #include <time.h>
 
 #define LOG_VERSION "0.1.0"
-#define LOG_USE_COLOR1
+// #define LOG_USE_COLOR
 
 // 一条 log 信息对应一个 log_Event。暴露这个数据结构是为了用户可以编写自己的 log 打印函数 log_LogFn 以输出 log。
 typedef struct
 {
 	va_list ap;
 	const char* fmt;
-	const char* file;
+	const char* file_name;
 	struct tm* time;
 	void* udata;
 	int line;
@@ -53,8 +53,6 @@ enum
 #define log_fatal(...) log_log(LOG_FATAL, __FILE__, __LINE__, __VA_ARGS__)
 
 // 控制和功能扩展。
-void log_init(int level, bool enable, log_LockFn fn, void* udata);
-
 void log_set_lock(log_LockFn fn, void* udata);
 void log_set_level(int level);
 void log_set_quiet(bool enable);

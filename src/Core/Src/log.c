@@ -21,8 +21,10 @@
  */
 
 #include "log.h"
+#include <stdbool.h>
+#include <stdio.h>
 
-#define MAX_CALLBACKS 3
+#define MAX_CALLBACKS 32
 
 typedef struct
 {
@@ -51,35 +53,30 @@ static const char* level_colors[] = {
 
 static void stdout_callback(log_Event* ev)
 {
-	char buf[16];
-	buf[strftime(buf, sizeof(buf), "%H:%M:%S", ev->time)] = '\0';
+	// 时间信息字符串
+	char time_string[16];
+	time_string[strftime(time_string, sizeof(time_string), "%H:%M:%S", ev->time)] = '\0';
 #ifdef LOG_USE_COLOR
-	fprintf(
-		ev->udata, "%s %s%-5s\x1b[0m \x1b[90m%s:%d:\x1b[0m ",
-		buf, level_colors[ev->level], level_strings[ev->level],
-		ev->file, ev->line);
+	fprintf(ev->udata, "%s %s%-5s\x1b[0m \x1b[90m%s:%d:\x1b[0m ", time_string, level_colors[ev->level], level_strings[ev->level], ev->file_name, ev->line);
 #else
-	fprintf(
-		ev->udata, "%s %-5s %s:%d: ",
-		buf, level_strings[ev->level], ev->file, ev->line);
+	// fprintf(ev->udata, "%s %-5s %s:%d: ", time_string, level_strings[ev->level], ev->file_name, ev->line);
+	fprintf(ev->udata, "%-5s %s:%d: ", level_strings[ev->level], ev->file_name, ev->line);
 #endif
 	vfprintf(ev->udata, ev->fmt, ev->ap);
 	fprintf(ev->udata, "\n");
 	fflush(ev->udata);
 }
-
-// static void file_callback(log_Event* ev)
-// {
-// 	char buf[64];
-// 	buf[strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", ev->time)] = '\0';
-// 	fprintf(
-// 		ev->udata, "%s %-5s %s:%d: ",
-// 		buf, level_strings[ev->level], ev->file, ev->line);
-// 	vfprintf(ev->udata, ev->fmt, ev->ap);
-// 	fprintf(ev->udata, "\n");
-// 	fflush(ev->udata);
-// }
-
+#if 0
+static void file_callback(log_Event* ev)
+{
+	char buf[64];
+	buf[strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", ev->time)] = '\0';
+	fprintf(ev->udata, "%s %-5s %s:%d: ", buf, level_strings[ev->level], ev->file_name, ev->line);
+	vfprintf(ev->udata, ev->fmt, ev->ap);
+	fprintf(ev->udata, "\n");
+	fflush(ev->udata);
+}
+#endif
 static void lock(void)
 {
 	if (Log_ConfigData.lock) { Log_ConfigData.lock(true, Log_ConfigData.udata); }
@@ -88,19 +85,6 @@ static void lock(void)
 static void unlock(void)
 {
 	if (Log_ConfigData.lock) { Log_ConfigData.lock(false, Log_ConfigData.udata); }
-}
-
-void log_init(int level, bool enable, log_LockFn fn, void* udata)
-{
-	// 设置日志等级
-	Log_ConfigData.level = level;
-	// 设置日志开关
-	Log_ConfigData.quiet = !enable;
-	// 设置锁函数
-	Log_ConfigData.lock = fn;
-	Log_ConfigData.udata = udata;
-
-    log_add_callback(stdout_callback, stderr, LOG_TRACE);
 }
 
 void log_set_level(int level)
@@ -116,34 +100,32 @@ void log_set_quiet(bool enable)
 // 添加callback，用于增加日志输出方式
 int log_add_callback(log_LogFn fn, void* udata, int level)
 {
-	for (int i = 0; i < MAX_CALLBACKS; i++)
+	for (int i = 0; i < MAX_CALLBACKS && !Log_ConfigData.callbacks[i].fn; i++)
 	{
-		if (!Log_ConfigData.callbacks[i].fn)
-		{
-			Log_ConfigData.callbacks[i] = (Callback){fn, udata, level};
-			return 0;
-		}
+		Log_ConfigData.callbacks[i] = (Callback){fn, udata, level};
+		return 0;
 	}
 	return -1;
 }
 
 // 日志输出函数
-void log_log(int level, const char* file, int line, const char* fmt, ...)
+void log_log(int level, const char* file_name, int line, const char* fmt, ...)
 {
 	time_t t = time(NULL);
 
 	log_Event ev = {
-		// va_list ap;
+		.ap = NULL,
 		.fmt = fmt,
-		.file = file,
+		.file_name = file_name,
 		.time = localtime(&t),
-		// void* udata;
+		.udata = stderr,
 		.line = line,
 		.level = level,
 	};
 
-	lock();
+	stdout_callback(&ev);
 
+	lock();
 	// callback输出
 	for (int i = 0; i < MAX_CALLBACKS && Log_ConfigData.callbacks[i].fn; i++)
 	{
@@ -156,21 +138,16 @@ void log_log(int level, const char* file, int line, const char* fmt, ...)
 			va_end(ev.ap);
 		}
 	}
-
 	unlock();
 }
 
-#ifdef TEST_LOG
+#ifndef TEST_LOG
 int main(int argc, char* argv[])
 {
 	// FILE* fp = fopen("./log_info.txt", "ab");
 	// if (fp == NULL)
 	// 	return -1;
-
 	// log_add_callback(file_callback, fp, LOG_INFO);
-	log_init(0, true, NULL, NULL);
-
-    // log_add_callback(stdout_callback, stderr, LOG_INFO);
 
 	log_trace("log_trace");
 	log_debug("log_debug");

@@ -1,5 +1,6 @@
 #ifndef __TOOLS_H
 #define __TOOLS_H
+
 #include <stdint.h>
 #include <stdio.h>
 

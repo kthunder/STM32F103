@@ -129,7 +129,9 @@ void log_log(int level, const char *file_name, int line, const char *fmt, ...)
         .level = level,
     };
 
+    va_start(ev.ap, fmt);
     stdout_callback(&ev);
+    va_end(ev.ap);
 
     lock();
     // callback输出

@@ -1,56 +1,39 @@
 #include "tools.h"
-#include "stm32f103x6.h"
 #include "stm32f1xx.h"
-#include "stm32f1xx_hal_usart.h"
 #include <stdint.h>
-#include <stdio.h>
+#include "log.h"
 
-static uint32_t systicks = 0;
-
-__attribute__((weak)) int __io_getchar()
+uint32_t HAL_GetUsTick_Prv()
 {
-    // return USART_Receive(USART1, (uint8_t *)&ch, 1);
-    return 0;
-}
+    static uint8_t init = 0;
 
-__attribute__((weak)) int __io_putchar(int ch)
-{
-    return USART_Transmit(USART1, (uint8_t *)&ch, 1);
-}
-
-__attribute__((weak)) int _read(int file, char *ptr, int len)
-{
-    (void)file;
-    int DataIdx;
-
-    for (DataIdx = 0; DataIdx < len; DataIdx++)
+    if (!init)
     {
-        *ptr++ = __io_getchar();
+        init++;
+        log_info("init");
+        // enable DWT
+        SET_BIT(CoreDebug->DEMCR, CoreDebug_DEMCR_TRCENA_Msk);
+        // clear DWT CYCCNT( not need )
+        DWT->CYCCNT = 0;
+        // enable DWT CYCCNT
+        SET_BIT(DWT->CTRL, DWT_CTRL_CYCCNTENA_Msk);
     }
 
-    return len;
+    return DWT->CYCCNT / 72;
 }
 
-__attribute__((weak)) int _write(int file, char *ptr, int len)
+uint32_t HAL_GetTick()
 {
-    (void)file;
-    int DataIdx;
-
-    for (DataIdx = 0; DataIdx < len; DataIdx++)
-    {
-        __io_putchar(*ptr++);
-    }
-    return len;
+    return HAL_GetUsTick_Prv() / 1000;
 }
 
 void delay_ms(uint32_t ms)
 {
-    uint32_t current = systicks;
-    while (systicks - current < ms)
+    uint32_t currentUsTick = HAL_GetUsTick_Prv();
+
+    while ((HAL_GetUsTick_Prv() - currentUsTick) < (ms * 1000))
         ;
 }
-
-uint32_t HAL_GetTick() { return systicks; }
 
 void Active_Soft_EXIT(IRQn_Type nIRQ)
 {
@@ -58,17 +41,4 @@ void Active_Soft_EXIT(IRQn_Type nIRQ)
     NVIC_EnableIRQ(nIRQ);
     SET_BIT(SCB->CCR, SCB_CCR_USERSETMPEND_Msk);
     WRITE_REG(NVIC->STIR, nIRQ);
-}
-
-// STM IRQHandler def
-
-void SysTick_Handler() { systicks++; }
-
-void HardFault_Handler()
-{
-    printf("%s\n", __func__);
-    while (1)
-    {
-        ;
-    }
 }

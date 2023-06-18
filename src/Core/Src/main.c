@@ -8,6 +8,7 @@
 #include "tools.h"
 #include <stdint.h>
 #include <stdio.h>
+// #include "FreeRTOS.h"
 
 void SystemInit()
 {
@@ -40,15 +41,30 @@ void GpioInit()
     GPIO_Init(GPIOC, &ucGpioConfig[2]);
 }
 
+void task_led(void *pvParameters)
+{
+    while (1)
+    {
+        // log_info("heart beat1");
+        GPIO_TogglePin(GPIOC, GPIO_Pin_13);
+        // delay_ms(3000);
+    }
+}
+void task_log(void *pvParameters)
+{
+    while (1)
+    {
+        // log_info("heart beat2");
+        // delay_ms(3000);
+    }
+}
+
 int main()
 {
     GpioInit();
     USART_Init(USART1);
-
-    while (1)
-    {
-        log_info("heart beat");
-        GPIO_TogglePin(GPIOC, GPIO_Pin_13);
-        delay_ms(3000);
-    }
+    // xTaskCreate(task_log, "task_log", configMINIMAL_STACK_SIZE, NULL, 2, NULL);
+    // xTaskCreate(task_led, "task_led", configMINIMAL_STACK_SIZE, NULL, 2, NULL);
+    // vTaskStartScheduler();
+    task_led(NULL);
 }

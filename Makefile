@@ -20,8 +20,10 @@ OBJDUMP  = $(CROSS_COMPILE)objdump
 CCFLAGS := -Wall -O0 -g
 CCFLAGS += -mcpu=cortex-m3 -mthumb
 CCFLAGS += -ffunction-sections -fdata-sections -fno-common -fmessage-length=0
-CCFLAGS += -I ./src/Core/Inc 
-CCFLAGS += -I ./src/Drivers/HAL_Driver/Inc 
+CCFLAGS += -I ./src/Core/Inc
+CCFLAGS += -I ./src/Drivers/HAL_Driver/Inc
+# CCFLAGS += -I ./src/Drivers/FREE_RTOS/Inc
+# CCFLAGS += -I ./src/Drivers/FREE_RTOS/portable/GCC_ARM_CM3
 CCFLAGS += -I ./src/Drivers/CMSIS/Include
 CCFLAGS += -I ./src/Drivers/CMSIS/Device/ST/STM32F1xx/Include
 CCFLAGS += -D STM32F103x6

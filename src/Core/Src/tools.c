@@ -72,20 +72,3 @@ void HardFault_Handler()
         ;
     }
 }
-
-void SVC_Handler()
-{
-    printf("%s\n", __func__);
-    while (1)
-    {
-        ;
-    }
-}
-void USBWakeUp_IRQHandler()
-{
-    printf("%s\n", __func__);
-    while (1)
-    {
-        ;
-    }
-}

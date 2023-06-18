@@ -22,6 +22,7 @@ uint32_t HAL_GetUsTick_Prv()
     return DWT->CYCCNT / 72;
 }
 
+// TODO : too short
 uint32_t HAL_GetTick()
 {
     return HAL_GetUsTick_Prv() / 1000;

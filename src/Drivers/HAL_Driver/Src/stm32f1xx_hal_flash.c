@@ -15,7 +15,7 @@
 #define FLASH_SIZE (FLASH_BANK1_END - FLASH_BASE + 1)
 
 /* private func */
-static HAL_StatusTypeDef FLASH_UNLOCK()
+static HAL_StatusTypeDef FLASH_Unlock_Prv()
 {
     HAL_StatusTypeDef status = HAL_OK;
 
@@ -33,7 +33,7 @@ static HAL_StatusTypeDef FLASH_UNLOCK()
     return status;
 }
 
-static HAL_StatusTypeDef FLASH_LOCK()
+static HAL_StatusTypeDef FLASH_Lock_Prv()
 {
     HAL_StatusTypeDef status = HAL_OK;
 
@@ -50,7 +50,7 @@ static HAL_StatusTypeDef FLASH_LOCK()
     return status;
 }
 
-HAL_StatusTypeDef FLASH_Waite_Idle(uint32_t Timeout)
+HAL_StatusTypeDef FLASH_Waite_Idle_Prv(uint32_t Timeout)
 {
     HAL_StatusTypeDef status = HAL_OK;
     uint32_t tickstart = HAL_GetTick();
@@ -69,7 +69,7 @@ HAL_StatusTypeDef FLASH_Waite_Idle(uint32_t Timeout)
     return status;
 }
 
-HAL_StatusTypeDef FLASH_Validate_Addr(uint32_t addr, uint32_t len)
+HAL_StatusTypeDef FLASH_Validate_Addr_Prv(uint32_t addr, uint32_t len)
 {
     if (addr % 2 != 0)
     {
@@ -88,7 +88,7 @@ HAL_StatusTypeDef FLASH_Validate_Addr(uint32_t addr, uint32_t len)
 
 static inline void FLASH_Progarm_HalfWord(uint32_t addr, uint16_t data)
 {
-    assert_param(FLASH_Validate_Addr(addr, 2) == HAL_OK);
+    assert_param(FLASH_Validate_Addr_Prv(addr, 2) == HAL_OK);
 
     log_info("addr : 0x%X, data %d", addr, data);
 
@@ -99,7 +99,7 @@ static inline void FLASH_Progarm_HalfWord(uint32_t addr, uint16_t data)
     *(__IO uint16_t *)(FLASH_BASE + addr) = data;
 
     // write idle
-    FLASH_Waite_Idle(HAL_MAX_DELAY);
+    FLASH_Waite_Idle_Prv(HAL_MAX_DELAY);
 
     // clear STRT bit ()
     CLEAR_BIT(FLASH->CR, FLASH_CR_PG);
@@ -109,7 +109,7 @@ static inline void FLASH_Progarm_HalfWord(uint32_t addr, uint16_t data)
 uint32_t FLASH_Write(uint32_t addr, void *ptr, uint32_t len)
 {
     assert_param(ptr != NULL);
-    assert_param(FLASH_Validate_Addr(addr, 2) == HAL_OK);
+    assert_param(FLASH_Validate_Addr_Prv(addr, 2) == HAL_OK);
 
     if (FLASH_Blank_Check(addr, len))
     {
@@ -118,7 +118,7 @@ uint32_t FLASH_Write(uint32_t addr, void *ptr, uint32_t len)
     }
 
     // unlock flash
-    FLASH_UNLOCK();
+    FLASH_Unlock_Prv();
 
     for (uint32_t i = 0; i < len; i += 2)
     {
@@ -126,7 +126,7 @@ uint32_t FLASH_Write(uint32_t addr, void *ptr, uint32_t len)
     }
 
     // lock flash
-    FLASH_LOCK();
+    FLASH_Lock_Prv();
 
     return HAL_OK;
 }
@@ -134,7 +134,7 @@ uint32_t FLASH_Write(uint32_t addr, void *ptr, uint32_t len)
 uint32_t FLASH_Read(uint32_t addr, void *ptr, uint32_t len)
 {
     assert_param(ptr != NULL);
-    assert_param(FLASH_Validate_Addr(addr, 2) == HAL_OK);
+    assert_param(FLASH_Validate_Addr_Prv(addr, 2) == HAL_OK);
 
     memcpy(ptr, (const void *)(addr + FLASH_BASE), len);
     return HAL_OK;
@@ -142,7 +142,7 @@ uint32_t FLASH_Read(uint32_t addr, void *ptr, uint32_t len)
 
 uint32_t FLASH_Blank_Check(uint32_t addr, uint32_t len)
 {
-    assert_param(FLASH_Validate_Addr(addr, 2) == HAL_OK);
+    assert_param(FLASH_Validate_Addr_Prv(addr, 2) == HAL_OK);
 
     for (uint32_t i = 0; i < len; i++)
     {
@@ -165,10 +165,10 @@ uint32_t FLASH_Erase(uint32_t addr)
     if (FLASH_Blank_Check(pageStartAddr, 1024))
     {
         // unlock flash
-        FLASH_UNLOCK();
+        FLASH_Unlock_Prv();
 
         // write idle
-        FLASH_Waite_Idle(HAL_MAX_DELAY);
+        FLASH_Waite_Idle_Prv(HAL_MAX_DELAY);
 
         // start page erase
         SET_BIT(FLASH->CR, FLASH_CR_PER);
@@ -180,13 +180,13 @@ uint32_t FLASH_Erase(uint32_t addr)
         SET_BIT(FLASH->CR, FLASH_CR_STRT);
 
         // write idle
-        FLASH_Waite_Idle(HAL_MAX_DELAY);
+        FLASH_Waite_Idle_Prv(HAL_MAX_DELAY);
 
         // over page erase
         CLEAR_BIT(FLASH->CR, FLASH_CR_PER);
 
         // lock flash
-        FLASH_LOCK();
+        FLASH_Lock_Prv();
     }
 
     return FLASH_Blank_Check(pageStartAddr, 1024);

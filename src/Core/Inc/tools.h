@@ -4,6 +4,14 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#define GET_BIT(value,bit) ((value)&(1<<(bit)))     //读取指定位
+#define CPL_BIT(value,bit) ((value)^=(1<<(bit)))    //取反指定位
+
+// #define SET_BIT(value,bit) ((value)|= (1<<(bit)))   //把某个位置1
+// #define CLEAR_BIT(value,bit) ((value)&=~(1<<(bit))) //把某个位置0
+
+
+
 void delay_ms(uint32_t ms);
 
 uint32_t HAL_GetTick();

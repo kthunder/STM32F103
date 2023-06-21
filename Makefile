@@ -32,6 +32,7 @@ LDFLAGS := -T $(ENV_DIR)/STM32F103C6TX_FLASH.ld
 LDFLAGS += -Wl,-gc-sections,--print-memory-usage
 LDFLAGS += -mcpu=cortex-m3 -mthumb
 LDFLAGS += --specs=nosys.specs --specs=nano.specs
+LDFLAGS += -nostartfiles -Xlinker --gc-sections -MMD -MP -Wl,-Map,"$(BLD_DIR)/$(TARGET_NAME).map"
 
 ifeq ($(OS),Windows_NT)
    download = $(ENV_DIR)\openocd.cmd $(abspath $(BLD_DIR)/$(TARGET_NAME).elf)
@@ -49,6 +50,7 @@ OBJ := $(patsubst $(SRC_DIR)/%, $(SRC_DIR)/%.o, $(SRC))
 
 $(TARGET_NAME).elf : $(OBJ)
 	$(CC) $(LDFLAGS) $(patsubst %, $(BLD_DIR)/%, $^) -o $(BLD_DIR)/$@
+	$(OBJDUMP) -D $(BLD_DIR)/$(TARGET_NAME).elf > $(BLD_DIR)/$(TARGET_NAME).dis
 
 $(OBJ) : %.o : % $(HDR)
 	mkdir -p $(shell dirname $(BLD_DIR)/$@)

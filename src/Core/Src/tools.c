@@ -38,7 +38,6 @@ void delay_ms(uint32_t ms)
 
 void Active_Soft_EXIT(IRQn_Type nIRQ)
 {
-    // __ASM volatile("SVC 0x01");
     NVIC_EnableIRQ(nIRQ);
     SET_BIT(SCB->CCR, SCB_CCR_USERSETMPEND_Msk);
     WRITE_REG(NVIC->STIR, nIRQ);

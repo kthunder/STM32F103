@@ -60,7 +60,12 @@ static void stdout_callback(log_Event *ev)
     fprintf(ev->udata, "%s %s%-5s\x1b[0m \x1b[90m%s:%d:\x1b[0m ", time_string, level_colors[ev->level], level_strings[ev->level], ev->file_name, ev->line);
 #else
     // fprintf(ev->udata, "%s %-5s %s:%d: ", time_string, level_strings[ev->level], ev->file_name, ev->line);
-    fprintf(ev->udata, "%-5s %s:%d: ", level_strings[ev->level], ev->file_name, ev->line);
+    // 时间
+    // fprintf(ev->udata, "%s ", time_string);
+    // 日志等级
+    // fprintf(ev->udata, "%-5s ", level_strings[ev->level]);
+    // 文件名和行号
+    // fprintf(ev->udata, "%s:%d: ", ev->file_name, ev->line);
 #endif
     vfprintf(ev->udata, ev->fmt, ev->ap);
     fprintf(ev->udata, "\n");

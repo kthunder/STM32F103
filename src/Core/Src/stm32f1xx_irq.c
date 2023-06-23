@@ -1,5 +1,6 @@
 #include "tools.h"
 #include "stm32f1xx.h"
+#include "stm32f1xx_hal_def.h"
 #include <stdint.h>
 #include <stdio.h>
 #include "log.h"
@@ -8,45 +9,37 @@
 
 void HardFault_Handler()
 {
-    printf("%s\n", __func__);
+    log_info(__func__);
     while (1)
     {
         ;
     }
 }
 
-uint32_t SVC_Handler_Fn(uint32_t *pwdSF)
+void SVC_Handler_Fn(uint32_t *pwdSF)
 {
-    uint32_t svc_number;
-    uint32_t svc_r0;
-    uint32_t svc_r1;
-    uint32_t svc_r2;
-    uint32_t svc_r3;
-    uint32_t nRet;
+    // pwdSF += 1; 
+    uint32_t svc_number = ((char *)pwdSF[6])[-2];
+    uint32_t svc_r0 = pwdSF[0];
+    uint32_t svc_r1 = pwdSF[1];
+    uint32_t svc_r2 = pwdSF[2];
+    uint32_t svc_r3 = pwdSF[3];
 
-    svc_number = ((char *)pwdSF[6])[-2];
-    svc_r0 = ((unsigned long)pwdSF[0]);
-    svc_r1 = ((unsigned long)pwdSF[1]);
-    svc_r2 = ((unsigned long)pwdSF[2]);
-    svc_r3 = ((unsigned long)pwdSF[3]);
-
-    log_info("SVC number : %d\n", svc_number);
-    log_info("SVC parameter 0 : %d\n", svc_r0);
-    log_info("SVC parameter 1 : %d\n", svc_r1);
-    log_info("SVC parameter 2 : %d\n", svc_r2);
-    log_info("SVC parameter 3 : %d\n", svc_r3);
-
-    pwdSF[0] = nRet;
-    return 0;
+    // __ASM __volatile("add	r7, #4");
 }
 
 void SVC_Handler()
 {
-    __ASM volatile(
-        "\n\t\
-    TST     LR,#4           \n\t\
-    ITE     EQ              \n\t\
-    MRSEQ   R0, MSP         \n\t\
-    MRSNE   R0, PSP         \n\t\
-    B       SVC_Handler_Fn");
+    // GNU GCC 使用r7作为sp的temp使用，并push了r7导致栈帧下移了一帧
+    // 之后的栈帧计算都会受到影响导致错误
+    // 所以这里使用sp增加4还原栈顶位置
+    __ASM __volatile("pop     {r7}");
+
+    __ASM __volatile("TST     LR,#4           \n\
+                      ITE     EQ              \n\
+                      MRSEQ   R0, MSP         \n\
+                      MRSNE   R0, PSP         \n\
+                      B       SVC_Handler_Fn");
+    // 直接使用B跳转，不被担心返回，因为返回在SVC_Handler_Fn中处理
+    // 因为不在此函数返回,所以不必担心这里的还原r7指令pop r7,代码不会执行到这里
 }

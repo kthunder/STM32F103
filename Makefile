@@ -17,9 +17,14 @@ STRIP    = $(CROSS_COMPILE)strip
 OBJCOPY  = $(CROSS_COMPILE)objcopy
 OBJDUMP  = $(CROSS_COMPILE)objdump
 
-CPU = cortex-m4 #cortex-m3
-LD_FILE = STM32F407VETX_FLASH.ld #STM32F103C6TX_FLASH.ld
-BOARD = STM32F407xx #STM32F103x6
+CPU = cortex-m3
+ifeq ($(CPU), cortex-m3)
+	LD_FILE = STM32F103C6TX_FLASH.ld
+	BOARD = STM32F103x6
+else
+	LD_FILE = STM32F407VETX_FLASH.ld
+	BOARD = STM32F407xx
+endif
 
 CCFLAGS := -Wall -O0 -g
 CCFLAGS += -mcpu=$(CPU) -mthumb -mthumb-interwork
@@ -33,11 +38,11 @@ CCFLAGS += -I ./src/Drivers/HAL_Driver/Inc
 CCFLAGS += -I ./src/Drivers/CMSIS/Include
 CCFLAGS += -I ./src/Drivers/CMSIS/Device/ST/STM32F1xx/Include
 
-
-LDFLAGS += -Wl -gc-sections --print-memory-usage -Map="$(BLD_DIR)/$(TARGET_NAME).map"
+LDFLAGS += -T $(ENV_DIR)/$(LD_FILE)
+# LDFLAGS += -nostartfiles -Xlinker -MMD -MP
+LDFLAGS += -Wl,--gc-sections,--print-memory-usage,-Map="$(BLD_DIR)/$(TARGET_NAME).map"
 LDFLAGS += -mcpu=$(CPU) -mthumb -mthumb-interwork
 LDFLAGS += --specs=nosys.specs --specs=nano.specs
-LDFLAGS := -T $(ENV_DIR)/$(LD_FILE)
 
 ifeq ($(OS),Windows_NT)
    download = $(ENV_DIR)\openocd.cmd $(abspath $(BLD_DIR)/$(TARGET_NAME).elf)
@@ -55,6 +60,8 @@ OBJ := $(patsubst $(SRC_DIR)/%, $(SRC_DIR)/%.o, $(SRC))
 
 $(TARGET_NAME).elf : $(OBJ)
 	$(CC) $(LDFLAGS) $(patsubst %, $(BLD_DIR)/%, $^) -o $(BLD_DIR)/$@
+	$(OBJCOPY) -Oihex $(BLD_DIR)/$(TARGET_NAME).elf > $(BLD_DIR)/$(TARGET_NAME).hex
+	$(OBJCOPY) -Obinary $(BLD_DIR)/$(TARGET_NAME).elf > $(BLD_DIR)/$(TARGET_NAME).bin
 	$(OBJDUMP) -D $(BLD_DIR)/$(TARGET_NAME).elf > $(BLD_DIR)/$(TARGET_NAME).dis
 
 $(OBJ) : %.o : % $(HDR)

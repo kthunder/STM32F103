@@ -17,22 +17,27 @@ STRIP    = $(CROSS_COMPILE)strip
 OBJCOPY  = $(CROSS_COMPILE)objcopy
 OBJDUMP  = $(CROSS_COMPILE)objdump
 
+CPU = cortex-m4 #cortex-m3
+LD_FILE = STM32F407VETX_FLASH.ld #STM32F103C6TX_FLASH.ld
+BOARD = STM32F407xx #STM32F103x6
+
 CCFLAGS := -Wall -O0 -g
-CCFLAGS += -mcpu=cortex-m3 -mthumb
+CCFLAGS += -mcpu=$(CPU) -mthumb -mthumb-interwork
 CCFLAGS += -ffunction-sections -fdata-sections -fno-common -fmessage-length=0
+CCFLAGS += -D $(BOARD)
+
 CCFLAGS += -I ./src/Core/Inc
 CCFLAGS += -I ./src/Drivers/HAL_Driver/Inc
 # CCFLAGS += -I ./src/Drivers/FREE_RTOS/Inc
 # CCFLAGS += -I ./src/Drivers/FREE_RTOS/portable/GCC_ARM_CM3
 CCFLAGS += -I ./src/Drivers/CMSIS/Include
 CCFLAGS += -I ./src/Drivers/CMSIS/Device/ST/STM32F1xx/Include
-CCFLAGS += -D STM32F103x6
 
-LDFLAGS := -T $(ENV_DIR)/STM32F103C6TX_FLASH.ld
-LDFLAGS += -Wl,-gc-sections,--print-memory-usage
-LDFLAGS += -mcpu=cortex-m3 -mthumb
+
+LDFLAGS += -Wl -gc-sections --print-memory-usage -Map="$(BLD_DIR)/$(TARGET_NAME).map"
+LDFLAGS += -mcpu=$(CPU) -mthumb -mthumb-interwork
 LDFLAGS += --specs=nosys.specs --specs=nano.specs
-LDFLAGS += -nostartfiles -Xlinker --gc-sections -MMD -MP -Wl,-Map,"$(BLD_DIR)/$(TARGET_NAME).map"
+LDFLAGS := -T $(ENV_DIR)/$(LD_FILE)
 
 ifeq ($(OS),Windows_NT)
    download = $(ENV_DIR)\openocd.cmd $(abspath $(BLD_DIR)/$(TARGET_NAME).elf)
